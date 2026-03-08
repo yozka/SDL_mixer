@@ -56,6 +56,9 @@ static const MIX_Decoder *decoders[] = {
     #ifdef DECODER_GME
     &MIX_Decoder_GME,
     #endif
+    #ifdef DECODER_YM
+    &MIX_Decoder_YM,
+    #endif
     #ifdef DECODER_MOD_XMP
     &MIX_Decoder_XMP,
     #endif

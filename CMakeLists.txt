@@ -174,6 +174,8 @@ option(SDLMIXER_WAVPACK "Enable WavPack audio" ON)
 cmake_dependent_option(SDLMIXER_WAVPACK_DSD "Enable WavPack DSD audio support" OFF SDLMIXER_WAVPACK OFF)
 cmake_dependent_option(SDLMIXER_WAVPACK_SHARED "Dynamically load WavPack library" "${SDLMIXER_DEPS_SHARED}" SDLMIXER_WAVPACK OFF)
 
+option(SDLMIXER_YM "Support loading YM audio via StSound" OFF)
+
 if(SDLMIXER_VORBIS_TREMOR OR SDLMIXER_VORBIS_VORBISFILE OR SDLMIXER_FLAC_LIBFLAC OR SDLMIXER_OPUS)
     set(SDLMIXER_OGG TRUE)
     set(SDLMIXER_OGG_install FALSE)
@@ -241,6 +243,7 @@ add_library(${sdl3_mixer_target_name}
     src/decoder_wav.c
     src/decoder_wavpack.c
     src/decoder_xmp.c
+    src/decoder_ym.c
 )
 add_library(SDL3_mixer::${sdl3_mixer_target_name} ALIAS ${sdl3_mixer_target_name})
 if(NOT TARGET SDL3_mixer::SDL3_mixer)
@@ -1042,6 +1045,20 @@ if(SDLMIXER_WAVPACK)
             target_link_libraries(${sdl3_mixer_target_name} PRIVATE WavPack::WavPack)
         endif()
     endif()
+endif()
+
+
+list(APPEND SDLMIXER_BACKENDS YM)
+set(SDLMIXER_YM_ENABLED FALSE)
+if(SDLMIXER_YM)
+    set(SDLMIXER_YM_ENABLED TRUE)
+    message(STATUS "Using vendored StSound")
+    enable_language(CXX)
+    include(CheckLinkerFlag)
+    add_subdirectory(external/StSound/StSoundLibrary external/StSound-build EXCLUDE_FROM_ALL)
+    target_compile_definitions(${sdl3_mixer_target_name} PRIVATE DECODER_YM)
+    target_link_libraries(${sdl3_mixer_target_name} PRIVATE StSoundLibrary)
+    target_include_directories(${sdl3_mixer_target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/StSound/StSoundLibrary)
 endif()
 
 # Restore BUILD_SHARED_LIBS

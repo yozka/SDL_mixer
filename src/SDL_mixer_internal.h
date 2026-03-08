@@ -294,6 +294,7 @@ extern const MIX_Decoder MIX_Decoder_TIMIDITY;
 extern const MIX_Decoder MIX_Decoder_FLUIDSYNTH;
 extern const MIX_Decoder MIX_Decoder_WAVPACK;
 extern const MIX_Decoder MIX_Decoder_GME;
+extern const MIX_Decoder MIX_Decoder_YM;
 extern const MIX_Decoder MIX_Decoder_XMP;
 extern const MIX_Decoder MIX_Decoder_SINEWAVE;
 extern const MIX_Decoder MIX_Decoder_RAW;
